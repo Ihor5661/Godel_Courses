@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "c39d0749-b4a4-4e21-853c-4dfc8b48a65d": {
+      "ProjectGuid": "c39d0749-b4a4-4e21-853c-4dfc8b48a65d",
+      "DisplayName": "Console_Chipher",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}
