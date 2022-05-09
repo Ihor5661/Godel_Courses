@@ -19,7 +19,7 @@ namespace Console_Chipher
 
         static void Main(string[] args)
         {
-            string input;
+            string input, result;
             int inputData;
 
             while (true)
@@ -36,7 +36,8 @@ namespace Console_Chipher
 
                 Console.WriteLine("Enter: ");
                 input = Console.ReadLine();
-                Console.WriteLine(GetCipher(input));
+                result = GetCipher(input);
+                Console.WriteLine(result);
 
                 Console.ReadKey();
             }
