@@ -1,0 +1,16 @@
+D:\Work\Godel_Technologies\ITVDN\Console_Chipher\Console_Chipher\bin\Debug\net5.0\Console_Chipher.exe
+D:\Work\Godel_Technologies\ITVDN\Console_Chipher\Console_Chipher\bin\Debug\net5.0\Console_Chipher.deps.json
+D:\Work\Godel_Technologies\ITVDN\Console_Chipher\Console_Chipher\bin\Debug\net5.0\Console_Chipher.runtimeconfig.json
+D:\Work\Godel_Technologies\ITVDN\Console_Chipher\Console_Chipher\bin\Debug\net5.0\Console_Chipher.runtimeconfig.dev.json
+D:\Work\Godel_Technologies\ITVDN\Console_Chipher\Console_Chipher\bin\Debug\net5.0\Console_Chipher.dll
+D:\Work\Godel_Technologies\ITVDN\Console_Chipher\Console_Chipher\bin\Debug\net5.0\ref\Console_Chipher.dll
+D:\Work\Godel_Technologies\ITVDN\Console_Chipher\Console_Chipher\bin\Debug\net5.0\Console_Chipher.pdb
+D:\Work\Godel_Technologies\ITVDN\Console_Chipher\Console_Chipher\obj\Debug\net5.0\Console_Chipher.csproj.AssemblyReference.cache
+D:\Work\Godel_Technologies\ITVDN\Console_Chipher\Console_Chipher\obj\Debug\net5.0\Console_Chipher.GeneratedMSBuildEditorConfig.editorconfig
+D:\Work\Godel_Technologies\ITVDN\Console_Chipher\Console_Chipher\obj\Debug\net5.0\Console_Chipher.AssemblyInfoInputs.cache
+D:\Work\Godel_Technologies\ITVDN\Console_Chipher\Console_Chipher\obj\Debug\net5.0\Console_Chipher.AssemblyInfo.cs
+D:\Work\Godel_Technologies\ITVDN\Console_Chipher\Console_Chipher\obj\Debug\net5.0\Console_Chipher.csproj.CoreCompileInputs.cache
+D:\Work\Godel_Technologies\ITVDN\Console_Chipher\Console_Chipher\obj\Debug\net5.0\Console_Chipher.dll
+D:\Work\Godel_Technologies\ITVDN\Console_Chipher\Console_Chipher\obj\Debug\net5.0\ref\Console_Chipher.dll
+D:\Work\Godel_Technologies\ITVDN\Console_Chipher\Console_Chipher\obj\Debug\net5.0\Console_Chipher.pdb
+D:\Work\Godel_Technologies\ITVDN\Console_Chipher\Console_Chipher\obj\Debug\net5.0\Console_Chipher.genruntimeconfig.cache
