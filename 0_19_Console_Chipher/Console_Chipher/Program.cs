@@ -4,14 +4,14 @@ namespace Console_Chipher
 {
     internal class Program
     {
-        static string Cipher(string text)
+        static string GetCipher(string text)
         {
-            int codeCh = text.Length;
+            int stepShear = text.Length;
             string result = "";
 
             for (int i = 0; i < text.Length; i++)
             {
-                result += (char)(text[i] ^ codeCh);
+                result += (char)(text[i] ^ stepShear);
             }
 
             return result;
@@ -19,27 +19,26 @@ namespace Console_Chipher
 
         static void Main(string[] args)
         {
-            int requestData = 0;
-            bool mainLoop = true;
-            string data;
+            string input;
+            int inputData;
 
-            while (mainLoop)
+            while (true)
             {
                 Console.Clear();
                 Console.WriteLine("1) Enter text;\n2) Enter cipher;\n3) Exit;");
-                requestData = Convert.ToInt32(Console.ReadLine());
+                input = Console.ReadLine();
+                int.TryParse(input, out inputData);
 
-                if (requestData != 3)
+                if (inputData == 3)
                 {
-                    Console.WriteLine("Enter: ");
-                    data = Console.ReadLine();
-                    Console.WriteLine(Cipher(data));
+                    break;
                 }
-                else
-                {
-                    mainLoop = false;
-                }
-                data = Console.ReadLine();
+
+                Console.WriteLine("Enter: ");
+                input = Console.ReadLine();
+                Console.WriteLine(GetCipher(input));
+
+                Console.ReadKey();
             }
         }
     }
