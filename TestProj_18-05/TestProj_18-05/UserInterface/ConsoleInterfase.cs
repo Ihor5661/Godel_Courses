@@ -171,7 +171,9 @@ namespace TestProj_18_05.UserInterface
             {
                 case (int)SoftwareTypes.FreeSoftware:
                     {
-                        //software = new FreeSoftware();
+                        DateTime installationDate;
+                        TimeSpan freeTrialPeriod;
+                        //software = new FreeSoftware(softwareName, softwareManufacturer,);
                         break;
                     }
                 case (int)SoftwareTypes.SharewareSoftware:
@@ -221,6 +223,12 @@ namespace TestProj_18_05.UserInterface
 
             return softwareType;
         }
+
+        private DateTime GetDateTime()
+        {
+            return DateTime.Now;
+        }
+
 
         private bool IsPermissibleTypeSoftwareNumber(int number)
         {
