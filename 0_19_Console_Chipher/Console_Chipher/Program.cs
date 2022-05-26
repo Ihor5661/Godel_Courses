@@ -28,7 +28,6 @@ namespace Console_Chipher
                 Console.WriteLine("1) Enter text;\n2) Enter cipher;\n3) Exit;");
                 input = Console.ReadLine();
                 int.TryParse(input, out inputData);
-
                 if (inputData == 3)
                 {
                     break;
@@ -41,6 +40,7 @@ namespace Console_Chipher
 
                 Console.ReadKey();
             }
+
         }
     }
 }
