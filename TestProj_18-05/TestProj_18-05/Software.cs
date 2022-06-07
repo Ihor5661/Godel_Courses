@@ -1,41 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace TestProj_18_05
 {
+    [DataContract]
     internal abstract class Software
     {
-        public string softwareName;
-        public string softwareManufacturer;
-        public string softwareType;
+        protected string softwareName;
+        protected string softwareManufacturer;
+        protected string softwareType;
 
         public Software(string softwareName, string softwareManufacturer)
         {
             this.softwareName = softwareName;
             this.softwareManufacturer = softwareManufacturer;
             this.softwareType = "Software";
-    }
+        }
 
+        [DataMember]
         public string SoftwareName
         {
             get { return softwareName; }
             set { softwareName = value; }
         }
 
+        [DataMember]
         public string SoftwareManufacturer
         {
             get { return softwareManufacturer; }
             set { softwareManufacturer = value; }
         }
+
+        [DataMember]
+        public string SoftwareType
+        {
+            get { return SoftwareType; }
+            private set { SoftwareType = value; }
+        }
     }
 
+    [DataContract]
     internal class FreeSoftware : Software
     {
-        public DateTime installationDate;
-        public TimeSpan freeTrialPeriod;
+        private DateTime installationDate;
+        private TimeSpan freeTrialPeriod;
 
         public FreeSoftware(string softwareName, string softwareManufacturer, DateTime installationDate,
             TimeSpan freeTrialPeriod) : base(softwareName, softwareManufacturer)
@@ -47,27 +59,37 @@ namespace TestProj_18_05
             this.softwareType = "FreeSoftware";
         }
 
+        [DataMember]
         public DateTime InstallationDate
         {
             get { return installationDate; }
             private set { installationDate = value; }
         }
 
+        [DataMember]
         public TimeSpan FreeTrialPeriod
         {
             get { return freeTrialPeriod; }
             private set { freeTrialPeriod = value; }
         }
+
+        [DataMember]
+        public string SoftwareType
+        {
+            get { return SoftwareType; }
+            private set { SoftwareType = value; }
+        }
     }
 
+    [DataContract]
     internal class SharewareSoftware : Software
     {
-        public decimal price;
-        public DateTime installationDate;
-        public TimeSpan termOfUse;
+        private decimal price;
+        private DateTime installationDate;
+        private TimeSpan termOfUse;
 
-        public SharewareSoftware(string softwareName, string softwareManufacturer, decimal price,
-            DateTime installationDate, TimeSpan termOfUse) : base(softwareName, softwareManufacturer)
+        public SharewareSoftware(string softwareName, string softwareManufacturer,
+            DateTime installationDate, TimeSpan termOfUse, decimal price) : base(softwareName, softwareManufacturer)
         {
             this.softwareName = softwareName;
             this.softwareManufacturer = softwareManufacturer;
@@ -77,25 +99,36 @@ namespace TestProj_18_05
             this.softwareType = "SharewareSoftware";
         }
 
+        [DataMember]
         public decimal Price
         {
             get { return price; }
             private set { price = value; }
         }
 
-        public DateTime InstallatioDate
+        [DataMember]
+        public DateTime InstallationDate
         {
             get { return installationDate; }
             private set { installationDate = value; }
         }
 
+        [DataMember]
         public TimeSpan TermOfUse
         {
             get { return termOfUse; }
             private set { termOfUse = value; }
         }
+
+        [DataMember]
+        public string SoftwareType
+        {
+            get { return SoftwareType; }
+            private set { SoftwareType = value; }
+        }
     }
 
+    [DataContract]
     internal class ProprietarySoftware : Software
     {
         public ProprietarySoftware(string softwareName, string softwareManufacturer)
@@ -104,6 +137,13 @@ namespace TestProj_18_05
             this.softwareName = softwareName;
             this.softwareManufacturer = softwareManufacturer;
             this.softwareType = "ProprietarySoftware";
+        }
+
+        [DataMember]
+        public string SoftwareType
+        {
+            get { return SoftwareType; }
+            private set { SoftwareType = value; }
         }
     }
 

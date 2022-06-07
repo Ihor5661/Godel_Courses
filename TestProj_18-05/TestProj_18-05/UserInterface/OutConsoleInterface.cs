@@ -15,7 +15,7 @@ namespace TestProj_18_05.UserInterface
         ProprietarySoftware
     }
 
-    internal class ConsoleInterfase : IShowInfo, IGetInfo
+    internal class OutConsoleInterface : IShowInfo
     {
         public void ClearDisplay()
         {
@@ -71,28 +71,28 @@ namespace TestProj_18_05.UserInterface
                 return;
             }
 
-            ShowInfo("Software name: " + software.softwareName);
-            ShowInfo("Manufacturer software: " + software.softwareManufacturer);
+            ShowInfo("Software name: " + software.SoftwareName);
+            ShowInfo("Manufacturer software: " + software.SoftwareManufacturer);
 
             if (software is FreeSoftware)
             {
                 FreeSoftware freeSoftware = (FreeSoftware)software;
-                ShowInfo("Type software: " + freeSoftware.softwareType);
+                ShowInfo("Type software: " + freeSoftware.SoftwareType);
                 ShowInfo("Installation date: " + freeSoftware.InstallationDate.ToString());
-                ShowInfo("Free trial period" + freeSoftware.freeTrialPeriod.ToString());
+                ShowInfo("Free trial period" + freeSoftware.FreeTrialPeriod.ToString());
             }
             if (software is SharewareSoftware)
             {
                 SharewareSoftware sharewareSoftware = (SharewareSoftware)software;
-                ShowInfo("Type software: " + sharewareSoftware.softwareType);
-                ShowInfo("Installation date: " + sharewareSoftware.installationDate.ToString());
-                ShowInfo("Term of use: " + sharewareSoftware.termOfUse.ToString());
-                ShowInfo("Price: " + sharewareSoftware.price.ToString() + "$");
+                ShowInfo("Type software: " + sharewareSoftware.SoftwareType);
+                ShowInfo("Installation date: " + sharewareSoftware.InstallationDate.ToString());
+                ShowInfo("Term of use: " + sharewareSoftware.TermOfUse.ToString());
+                ShowInfo("Price: " + sharewareSoftware.Price.ToString() + "$");
             }
             if (software is ProprietarySoftware)
             {
                 ProprietarySoftware proprietarySoftware = (ProprietarySoftware)software;
-                ShowInfo("Type software: " + proprietarySoftware.softwareType);
+                ShowInfo("Type software: " + proprietarySoftware.SoftwareType);
             }
 
             ShowFooterInfo(null);
@@ -123,6 +123,17 @@ namespace TestProj_18_05.UserInterface
         //    ShowInfo("Manufacturer software: " + software.softwareManufacturer);
         //    ShowFooterInfo(null);
         //}
+        public void ShowAllSoftwaresInfo(List<Software> softwares)
+        {
+            foreach (var software in softwares)
+            {
+                ShowSoftwareInfo(software);
+            }
+            ShowInfo("Quantity softwares: " + softwares.Count);
+            SkipLines(2);
+
+            return;
+        }
 
         public void UserInfo(User user)
         {
@@ -138,104 +149,5 @@ namespace TestProj_18_05.UserInterface
 
             return;
         }
-
-        //---------------------------------------------------------------------------//
-
-        public string GetInfo(string message)
-        {
-            ShowInfo(message);
-            string info = Console.ReadLine();
-            if (info == null)
-            {
-                info = "";
-            }
-            return info;
-        }
-
-        public Software GetSoftware()
-        {
-            Software software;
-            string softwareName;
-            string softwareManufacturer;
-
-            int softwareType;
-            softwareType = GetTypeSoftware();
-
-            if (IsPermissibleTypeSoftwareNumber(softwareType))
-            {
-                softwareName = GetInfo("Enter software name: ");
-                softwareManufacturer = GetInfo("Enter software manufacturer: ");
-            }
-
-            switch (softwareType)
-            {
-                case (int)SoftwareTypes.FreeSoftware:
-                    {
-                        DateTime installationDate;
-                        TimeSpan freeTrialPeriod;
-                        //software = new FreeSoftware(softwareName, softwareManufacturer,);
-                        break;
-                    }
-                case (int)SoftwareTypes.SharewareSoftware:
-                    {
-                        //software = new FreeSoftware();
-                        break;
-                    }
-                case (int)SoftwareTypes.ProprietarySoftware:
-                    {
-                        // = new FreeSoftware();
-                        break;
-                    }
-                default:
-                    {
-                        IErrorCatcher errorCatcher = new ErrorCatcher();
-                        errorCatcher.Error(1);
-                        break;
-                    }
-            }
-
-            return null;
-        }
-
-        public User GetUserData()
-        {
-            return null;
-        }
-
-        private int GetTypeSoftware()
-        {
-            string message = "";
-            for (int i = (int)SoftwareTypes.FreeSoftware; i < Enum.GetNames(typeof(SoftwareTypes)).Length; i++)
-            {
-                message += ($"{i} - {(SoftwareTypes)i}\n");
-            }
-            message += ("Enter software type: ");
-
-            int softwareType;
-            string input = GetInfo(message);
-            int.TryParse(input, out softwareType);
-
-            if (softwareType >= Enum.GetNames(typeof(SoftwareTypes)).Length
-                || softwareType < (int)SoftwareTypes.Software)
-            {
-                softwareType = 3; //ToDo // No default value // Error
-            }
-
-            return softwareType;
-        }
-
-        private DateTime GetDateTime()
-        {
-            return DateTime.Now;
-        }
-
-
-        private bool IsPermissibleTypeSoftwareNumber(int number)
-        {
-            bool result = ((int)SoftwareTypes.FreeSoftware <= number && number < Enum.GetNames(typeof(SoftwareTypes)).Length);
-            return result;
-        }
-
-
     }
 }

@@ -8,7 +8,7 @@ namespace TestProj_18_05.Service
 {
     internal interface IUserConnector : IConnector
     {
-        void SignIn(string username, string password);
-        void SignUp(string username, string password);
+        User SignIn(string username, string password);
+        User SignUp(string username, string password, string secondPassword);
     }
 }

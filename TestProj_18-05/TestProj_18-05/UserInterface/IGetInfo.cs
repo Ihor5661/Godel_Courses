@@ -10,6 +10,6 @@ namespace TestProj_18_05.UserInterface
     {
         string GetInfo(string message);
         Software GetSoftware();
-        User GetUserData();
+        //User GetUserData();
     }
 }

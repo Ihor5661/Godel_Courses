@@ -3,216 +3,194 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TestProj_18_05.Service;
+using TestProj_18_05.UserInterface;
 
 namespace TestProj_18_05
 {
-    /// Todo // Refactor
+    class Menu
+    {
+        private bool existError = false;
 
+        public bool ExistError
+        {
+            get { return existError; }
+            private set { existError = value; }
+        }
 
-    //static class Menu
-    //{
-    //    private static string _login;
+        IShowInfo showInfo = new OutConsoleInterface();
+        IGetInfo getInfo = new InConsoleInterface();
+        IErrorCatcher errorCatcher = new ErrorCatcher();
+        IDataController dataController = new DataManager();
+        User user;
 
-    //    public static void StartMenu()
-    //    {
-    //        int inputVar;
-    //        string input;
-    //        Console.WriteLine("1) Sign in; \n2) Sign up; \n3) Exit;");
-    //        input = Console.ReadLine();
-    //        int.TryParse(input, out inputVar);
-    //        Console.Clear();
+        public void StartMenu()
+        {
+            int inputVar;
+            string input;
 
-    //        switch (inputVar)
-    //        {
-    //            case 1:
-    //                {
-    //                    //SignIn();
-    //                    string login, password;
-    //                    Console.WriteLine(new string('=', 20) + " Sign in " + new string('=', 20));
-    //                    Console.Write("Enter login: ");
-    //                    login = Console.ReadLine();
-    //                    Console.Write("Enter password: ");
-    //                    password = Console.ReadLine();
+            showInfo.ClearDisplay();
+            input = getInfo.GetInfo("1) Sign in; \n2) Sign up; \n3) Exit;");
+            int.TryParse(input, out inputVar);
+            showInfo.ClearDisplay();
 
-    //                    break;
-    //                }
-    //            case 2:
-    //                {
-    //                    SignUp();
-    //                    break;
-    //                }
-    //            case 3:
-    //                {
-    //                    Console.WriteLine("Bye-Bye!!!");
-    //                    break;
-    //                }
-    //            default:
-    //                {
-    //                    Console.WriteLine("Operation not found!!!");
-    //                    break;
-    //                }
-    //        }
-    //    }
+            switch (inputVar)
+            {
+                case 1:
+                    {
+                        try
+                        {
+                            string login, password;
+                            dataController.Connect(null, null);
 
-    //    public static void SignIn()
-    //    {
-    //        string login ="", password="";
+                            login = getInfo.GetInfo("Enter login: ");
+                            password = getInfo.GetInfo("Enter password: ");
+                            user = dataController.SignIn(login, password);
+                            if (user != null)
+                            {
+                                MainMenu(user);
+                            }
+                            else
+                            {
+                                errorCatcher.Error(""); // warning
+                            }
 
-    //        //if (CheckLoginExist(login) && CheckUserPassword(login, password))
-    //        //{
-    //        //    _login = login;
-    //        //    MainMenu();
-    //        //}
-    //        //else
-    //        //{
-    //        //    Console.WriteLine("Login or password was entered incorrectly!!!");
-    //        //    Console.ReadLine();
-    //        //    Console.Clear();
-    //        //    SignIn();
-    //        //}
-    //    }
+                            dataController.Disconnect(null, null);
+                        }
+                        catch (Exception)
+                        {
+                            errorCatcher.Error(1);
+                            existError = true;
+                        }
 
-    //    private static bool CheckUserPassword(string login, string password)
-    //    {
-    //        return true;
-    //    }
+                        break;
+                    }
+                case 2:
+                    {
+                        try
+                        {
+                            string login, password, secondPassword;
+                            dataController.Connect(null, null);
 
-    //    public static void SignUp()
-    //    {
-    //        string login, password, passwordRep;
-    //        Console.WriteLine(new string('=', 20) + " Sign up " + new string('=', 20));
-    //        Console.WriteLine("Enter login: ");
-    //        login = Console.ReadLine();
-    //        Console.WriteLine("Enter password: ");
-    //        password = Console.ReadLine();
-    //        Console.WriteLine("Repeat password: ");
-    //        passwordRep = Console.ReadLine();
-    //    }
+                            login = getInfo.GetInfo("Enter login: ");
+                            password = getInfo.GetInfo("Enter password: ");
+                            secondPassword = getInfo.GetInfo("Enter password again: ");
+                            user = dataController.SignUp(login, password, secondPassword);
 
-    //    private static void MainMenu()
-    //    {
-    //        int inputVar;
-    //        string input;
-    //        Console.WriteLine(new string('=', 20) + " Hello, " + _login + "!!! " + new string('=', 20));
-    //        Console.WriteLine("1) Add record; \n2) Find record; \n 3) Show information about all records; \n4) Exit;");
-    //        input = Console.ReadLine();
-    //        int.TryParse(input, out inputVar);
-    //        Console.Clear();
+                            if (user != null)
+                            {
+                                MainMenu(user);
+                            }
+                            else
+                            {
+                                errorCatcher.Error(1);  // warning
+                            }
 
-    //        switch (inputVar)
-    //        {
-    //            case 1:
-    //                {
-    //                    AddRecord();
-    //                    break;
-    //                }
-    //            case 2:
-    //                {
-    //                    FindRecord();
-    //                    break;
-    //                }
-    //            case 3:
-    //                {
-    //                    ShowInformationAboutAllRecords();
-    //                    break;
-    //                }
-    //            case 4:
-    //                {
-    //                    Console.WriteLine("Bye-Bye!!!");
-    //                    break;
-    //                }
-    //            default:
-    //                {
-    //                    Console.WriteLine("Operation not found!!!");
-    //                    break;
-    //                }
-    //        }
-    //    }
+                            dataController.Disconnect(null, null);
+                        }
+                        catch (Exception)
+                        {
+                            errorCatcher.Error(1);
+                            existError = true;
+                        }
 
-    //    private static void AddRecord()
-    //    {
-    //        int inputVar;
-    //        string input;
-    //        Console.WriteLine(new string('=', 50));
-    //        Console.WriteLine("Enter type Software.");
-    //        Console.WriteLine("1) Free software; \n2) Shareware software; \n3) Proprietary software; \n4) Go back; \n5) Exit;");
-    //        input = Console.ReadLine();
-    //        int.TryParse(input, out inputVar);
-    //        Console.Clear();
-    //        switch (inputVar)
-    //        {
-    //            case 1:
-    //                {
-    //                    break;
-    //                }
-    //            case 2:
-    //                {
-    //                    break;
-    //                }
-    //            case 3:
-    //                {
-    //                    break;
-    //                }
-    //            case 4:
-    //                {
-    //                    MainMenu();
-    //                    break;
-    //                }
-    //            case 5:
-    //                {
-    //                    Console.WriteLine("Bye-Bye!!!");
-    //                    break;
-    //                }
-    //            default:
-    //                {
-    //                    Console.WriteLine("Operation not found!!!");
-    //                    break;
-    //                }
-    //        }
-    //    }
+                        break;
+                    }
+                case 3:
+                    {
+                        showInfo.ShowInfo("Bye-Bye!!!");
+                        getInfo.GetInfo("");
+                        break;
+                    }
+                default:
+                    {
+                        showInfo.ShowError("Operation not found!!!");
+                        existError = true;
+                        break;
+                    }
+            }
+        }
 
-    //    private static void FindRecord()
-    //    {
-    //        int inputVar;
-    //        string input;
-    //        Console.WriteLine(new string('=', 50));
-    //        Console.WriteLine("Enter search parameter.");
-    //        Console.WriteLine("1) Type software; \n2) Name software; \n3) Go back; \n4) Exit;");
-    //        input = Console.ReadLine();
-    //        int.TryParse(input, out inputVar);
-    //        Console.Clear();
-    //        switch (inputVar)
-    //        {
-    //            case 1:
-    //                {
-    //                    break;
-    //                }
-    //            case 2:
-    //                {
-    //                    break;
-    //                }
-    //            case 3:
-    //                {
-    //                    MainMenu();
-    //                    break;
-    //                }
-    //            case 4:
-    //                {
-    //                    Console.WriteLine("Bye-Bye!!!");
-    //                    break;
-    //                }
-    //            default:
-    //                {
-    //                    Console.WriteLine("Operation not found!!!");
-    //                    break;
-    //                }
-    //        }
-    //    }
+        private void MainMenu(User user)
+        {
+            int inputVar;
+            string input;
+            bool exit = false;
 
-    //    private static void ShowInformationAboutAllRecords()
-    //    {
-            
-    //    }
-       
-    //}
+            while (!exit)
+            {
+                showInfo.ClearDisplay();
+                showInfo.ShowHeaderInfo($"Hello, {user.Login} !!!");
+                input = getInfo.GetInfo("1) Add record; \n2) Find record;" +
+                    " \n3) Show information about all user`s records; \n4) Exit;");
+                int.TryParse(input, out inputVar);
+                showInfo.ClearDisplay();
+
+                switch (inputVar)
+                {
+                    case 1:
+                        {
+                            Software software = getInfo.GetSoftware();
+                            dataController.AddSoftware(software);
+                            break;
+                        }
+                    case 2:
+                        {
+                            input = getInfo.GetInfo("1) Find by name; \n2) Find by type; \n3) Exit;");
+                            int.TryParse(input, out inputVar);
+                            showInfo.ClearDisplay();
+
+                            switch (inputVar)
+                            {
+                                case 1:
+                                    {
+                                        string softName;
+                                        softName = getInfo.GetInfo("Enter software name: ");
+                                        dataController.FindSoftwareByName(softName);
+                                        break;
+                                    }
+                                case 2:
+                                    {
+                                        string softType;
+                                        softType = getInfo.GetInfo("Enter software type: ");
+                                        dataController.FindSoftwareByType(softType);
+                                        break;
+                                    }
+                                case 3:
+                                    {
+                                        showInfo.ShowInfo("Bye-Bye!!!");
+                                        getInfo.GetInfo("");
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        showInfo.ShowError("Operation not found!!!");
+                                        existError = true;
+                                        break;
+                                    }
+                            }
+                            break;
+                        }
+                    case 3:
+                        {
+                            showInfo.ShowAllSoftwaresInfo(user.Softwares);
+                            break;
+                        }
+                    case 4:
+                        {
+                            showInfo.ShowInfo("Bye-Bye!!!");
+                            exit = true;
+                            break;
+                        }
+                    default:
+                        {
+                            showInfo.ShowError("Operation not found!!!");
+                            existError = true;
+                            exit = true;
+                            break;
+                        }
+                }
+            }
+        }
+    }
 }

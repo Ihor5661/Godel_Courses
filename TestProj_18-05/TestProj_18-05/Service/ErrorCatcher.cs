@@ -21,7 +21,7 @@ namespace TestProj_18_05.Service
     {
         public void Error(string message)
         {
-            IShowInfo outInfo = new ConsoleInterfase();
+            IShowInfo outInfo = new OutConsoleInterface();
             outInfo.ShowError(message);
         }
 

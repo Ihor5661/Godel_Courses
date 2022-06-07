@@ -20,6 +20,7 @@ namespace TestProj_18_05.UserInterface
         //void SoftwareInfo(SharewareSoftware software);
         //void SoftwareInfo(ProprietarySoftware software);
         
+        void ShowAllSoftwaresInfo(List<Software> softwares);
         void UserInfo(User user);
     }
 }
