@@ -7,8 +7,16 @@ using System.Threading.Tasks;
 
 namespace TestProj_18_05
 {
+    //class CompSoftware : IComparer<Software>
+    //{
+    //    public int Compare(Software x, Software y)
+    //    {
+    //        return string.Compare(x.SoftwareName, y.SoftwareName);
+    //    }
+    //}
+
     [DataContract]
-    internal abstract class Software
+    internal /*abstract*/ class Software
     {
         protected string softwareName;
         protected string softwareManufacturer;
@@ -38,8 +46,8 @@ namespace TestProj_18_05
         [DataMember]
         public string SoftwareType
         {
-            get { return SoftwareType; }
-            private set { SoftwareType = value; }
+            get { return softwareType; }
+            private set { softwareType = value; }
         }
     }
 
@@ -76,8 +84,8 @@ namespace TestProj_18_05
         [DataMember]
         public string SoftwareType
         {
-            get { return SoftwareType; }
-            private set { SoftwareType = value; }
+            get { return softwareType; }
+            private set { softwareType = value; }
         }
     }
 
@@ -123,8 +131,8 @@ namespace TestProj_18_05
         [DataMember]
         public string SoftwareType
         {
-            get { return SoftwareType; }
-            private set { SoftwareType = value; }
+            get { return softwareType; }
+            private set { softwareType = value; }
         }
     }
 
@@ -142,8 +150,8 @@ namespace TestProj_18_05
         [DataMember]
         public string SoftwareType
         {
-            get { return SoftwareType; }
-            private set { SoftwareType = value; }
+            get { return softwareType; }
+            private set { softwareType = value; }
         }
     }
 

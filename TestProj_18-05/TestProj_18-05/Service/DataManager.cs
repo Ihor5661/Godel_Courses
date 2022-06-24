@@ -11,97 +11,168 @@ namespace TestProj_18_05.Service
 {
     internal class DataManager : IDataController
     {
-        private List<User> users = new List<User>();
-        private bool isConnect = false;
+        User user;
+        IErrorCatcher errorCatcher = new ErrorCatcher();
+        IShowInfo showInfo = new OutConsoleInterface();
+        IGetInfo getInfo = new InConsoleInterface();
+        bool existError = false;
 
-        public void Connect(string host, string port)
+
+        public DataManager(User user)
         {
-            var jsonFormatter = new DataContractJsonSerializer(typeof(User));
-
-            using (var file = new FileStream("../../../../DB/User.json", FileMode.OpenOrCreate)) // ToDo
+            if (user == null)
             {
-                var user = jsonFormatter.ReadObject(file) as User;
-
-                if (user != null)
-                {
-                    users.Add(user); 
-                }
-            }
-
-            isConnect = true;
-            return;
-        }
-
-        public void Disconnect(string host, string port)
-        {
-            var jsonFormatter = new DataContractJsonSerializer(typeof(User));
-
-            using (var file = new FileStream("../../../../DB/User.json", FileMode.Create)) // ToDo // the path to the file 
-            {
-                jsonFormatter.WriteObject(file, new User(null, null)); // ToDo // User data
-            }
-
-            isConnect = false;
-            return;
-        }
-
-        public void AddSoftware(Software software)
-        {
-            IShowInfo showInfo = new OutConsoleInterface();
-            IGetInfo getInfo = new InConsoleInterface();
-
-            if (software != null)
-            {
-                users[0].Softwares.Add(software); //ToDo // index users
+                errorCatcher.Error("No user information!!!");
+                existError = true;
+                getInfo.GetInfo("");
             }
             else
             {
-                showInfo.ShowError("No software information!!!");
+                this.user = user;
             }
-
-            return;
         }
 
-        public Software FindSoftwareByName(string name)
+        public bool AddSoftware(Software software)
         {
+            if (software != null)
+            {
+                if (user.Softwares == null)
+                {
+                    user.Softwares = new List<Software>();
+                }
+                user.Softwares.Add(software);
+            }
+            else
+            {
+                errorCatcher.Error("No software information!!!");
+                existError = true;
+                getInfo.GetInfo("");
+            }
+
+            return true;
+        }
+
+        public bool DeleteSoftware(string softName)
+        {
+            int numberSoft = FindNumSoftwareByName(softName);
+
+            if (user.Softwares != null)
+            {
+                if (user.Softwares.Count > 0 && numberSoft != -1)
+                {
+                    user.Softwares.RemoveAt(numberSoft);
+                }
+                else
+                {
+                    errorCatcher.Error("Software with this name was not found!!!");
+                    existError = true;
+                }
+               
+            }
+            else
+            {
+                errorCatcher.Error("No software info!!!");
+                existError = true;
+            }
+
+            return true;
+        }
+
+        private int FindNumSoftwareByName(string namer)
+        {
+            int numberSoft = -1;
+
+            for (int i = 0; i < user.Softwares.Count; i++)
+            {
+                if (user.Softwares[i].SoftwareName == namer)
+                {
+                    numberSoft = i;
+                    break;
+                }
+            }
+
+            return numberSoft;
+        }
+        
+
+        public List<Software> FindSoftwareByName(string namer)
+        {
+            List<Software> softwares = new List<Software>();
+            bool isSoft = false;
+
+            for (int i = 0; i < user.Softwares.Count; i++)
+            {
+                if (user.Softwares[i].SoftwareName == namer)
+                {
+                    softwares.Add(user.Softwares[i]);
+                    isSoft = true;
+                }
+            }
+            if (isSoft)
+            {
+                return softwares;
+            }
             return null;
         }
 
-        public Software FindSoftwareByType(string type)
+        public List<Software> FindSoftwareByType(string type)
         {
+            List<Software> softwares = new List<Software>();
+            bool isSoft = false;
+
+            for (int i = 0; i < user.Softwares.Count; i++)
+            {
+                if (user.Softwares[i].SoftwareType == type)
+                {
+                    softwares.Add(user.Softwares[i]);
+                    isSoft = true;
+                }
+            }
+            if (isSoft)
+            {
+                return softwares;
+            }
             return null;
         }
 
         public List<Software> GetSoftwares()
         {
-            return null;
+            return user.Softwares;
         }
 
-
-        public User SignIn(string login, string password)
+        public List<Software> SortSoftwares() //ToDo
         {
-            if (!string.IsNullOrEmpty(password) && CheckLoginExist(login) && !string.IsNullOrEmpty(password))
+            List<Software> softwaresTemp = new List<Software>(user.Softwares);
+            List<string> softName = new List<string>();
+            List<Software> softwares = new List<Software>();
+
+            for (int i = 0; i < user.Softwares.Count; i++)
             {
-                //_login = login;
-                //MainMenu();
+                softName.Add(user.Softwares[i].SoftwareName);
             }
-            else
+            softName.Sort();
+
+            for (int i = 0; i < user.Softwares.Count; i++)
             {
-                //Console.WriteLine("Error!!!");
-                //Console.ReadLine();
-                //Console.Clear();
+                for (int j = 0; j < softwaresTemp.Count; j++)
+                {
+                    if (softName[i] == softwaresTemp[j].SoftwareName)
+                    {
+                        softwares.Add(softwaresTemp[j]);
+                        softwaresTemp.RemoveAt(j);
+                        break;
+                    }
+                }
             }
-            return null;
+            
+            return softwares;
         }
 
-        public User SignUp(string username, string password, string secondPassword)
+        public bool ExistError
         {
-            return null;
+            get { return existError; }
+            private set { existError = value; }
         }
 
-        private bool CheckLoginExist(string login)
-        {
-            return true; // TODO
-        }
     }
 }

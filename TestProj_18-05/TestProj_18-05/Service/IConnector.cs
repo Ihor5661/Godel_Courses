@@ -8,7 +8,11 @@ namespace TestProj_18_05.Service
 {
     internal interface IConnector
     {
-        void Connect(string host, string port);
-        void Disconnect(string host, string port);
+        bool Connect(string host, string port);
+        bool Disconnect(string host, string port);
+
+        User Connect(string userName);
+        bool Disconnect();
+        bool SaveChanges(User user);
     }
 }

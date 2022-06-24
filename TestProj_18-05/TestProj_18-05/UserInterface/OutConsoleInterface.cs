@@ -17,6 +17,8 @@ namespace TestProj_18_05.UserInterface
 
     internal class OutConsoleInterface : IShowInfo
     {
+        IErrorCatcher errorCatcher = new ErrorCatcher();
+
         public void ClearDisplay()
         {
             Console.ResetColor();
@@ -66,7 +68,6 @@ namespace TestProj_18_05.UserInterface
         {
             if (software == null)
             {
-                IErrorCatcher errorCatcher = new ErrorCatcher();
                 errorCatcher.Error(0);
                 return;
             }
@@ -79,7 +80,7 @@ namespace TestProj_18_05.UserInterface
                 FreeSoftware freeSoftware = (FreeSoftware)software;
                 ShowInfo("Type software: " + freeSoftware.SoftwareType);
                 ShowInfo("Installation date: " + freeSoftware.InstallationDate.ToString());
-                ShowInfo("Free trial period" + freeSoftware.FreeTrialPeriod.ToString());
+                ShowInfo("Free trial period: " + freeSoftware.FreeTrialPeriod.ToString());
             }
             if (software is SharewareSoftware)
             {
@@ -125,6 +126,11 @@ namespace TestProj_18_05.UserInterface
         //}
         public void ShowAllSoftwaresInfo(List<Software> softwares)
         {
+            if (softwares == null)
+            {
+                errorCatcher.Error("No software info!!!");
+                return;
+            }
             foreach (var software in softwares)
             {
                 ShowSoftwareInfo(software);
@@ -132,11 +138,20 @@ namespace TestProj_18_05.UserInterface
             ShowInfo("Quantity softwares: " + softwares.Count);
             SkipLines(2);
 
+
+
+
+
             return;
         }
 
         public void UserInfo(User user)
         {
+            if (user == null)
+            {
+                errorCatcher.Error("No user info!!!");
+                return;
+            }
             ShowInfo("User login: " + user.Login);
             ShowInfo("Quantity softwares: " + user.Softwares.Count);
             SkipLines(1);
@@ -146,6 +161,7 @@ namespace TestProj_18_05.UserInterface
             }
             ShowFooterInfo($"End information about user {user.Login}");
             SkipLines(2);
+
 
             return;
         }

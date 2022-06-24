@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace TestProj_18_05.Service
 {
-    internal interface IUserConnector : IConnector
+    internal interface IUserConnector
     {
+        bool ExistError { get; }
+
         User SignIn(string username, string password);
         User SignUp(string username, string password, string secondPassword);
     }
