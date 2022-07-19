@@ -7,48 +7,25 @@ using System.Threading.Tasks;
 
 namespace PersonCollection
 {
-    interface IMyList<T>
-    {
-        //T this[int index]
-        //{
-        //    get;
-        //    set;
-        //}
 
+    interface IMyList<T>: IMyCollection<T>, ICollection<T>
+    {
+        T this[int index]
+        {
+            get;
+            set;
+        }
+
+        void RemoveAt(int index);
         int IndexOf(T item);
         void Insert(int index, T item);
-        void RemoveAt(int index);
-
-        //int Add(object? value);
-        //void Clear();
-        //bool Contains(object? value);
-        //int IndexOf(object? value);
-        //void Insert(int index, object? value);
-        //void Remove(object? value);
-        //void RemoveAt(int index);
+        T[] Sort();
     }
 
     class MyList<T> : IMyList<T>
     {
         private T[] arrayMyList;
-        private int count;
-
-        public MyList()
-        {
-            arrayMyList = new T[10];
-            count = 0;
-        }
-
-
-        private void CapasityController()
-        {
-            if (arrayMyList.Length == Count)
-            {
-                T[] newArrayMyList = new T[Count * 2];
-                arrayMyList.CopyTo( newArrayMyList, 0 );
-                arrayMyList = newArrayMyList;
-            }
-        }
+        private int position = -1;
 
         public T this[int index]
         {
@@ -56,95 +33,220 @@ namespace PersonCollection
             {
                 if (index >= Count)
                 {
-                    throw new NotImplementedException();
+                    throw new IndexOutOfRangeException();
                 }
                 return arrayMyList[index];
             }
 
             set
             {
-                CapasityController();
+                if (index >= Count)
+                {
+                    throw new IndexOutOfRangeException();
+                }
+
                 arrayMyList[index] = value;
-                Count++;
             }
         }
 
-        //T IMyList<T>.this[int index]
-        //{
-        //    get {
-        //        if (index >= Count)
-        //        {
-        //            throw new NotImplementedException();
-        //        }
-        //        return arrayMyList[index];
-        //    }
-
-        //    set 
-        //    {
-        //        CapasityController();
-        //        Count++;
-        //        arrayMyList[index] = value;
-        //    }
-        //}
-
         public int Count
         {
-            get 
-            { 
-                return count;
-            }
+            get;
+            private set;
+        }
 
-            private set
+        public MyList()
+        {
+            Clear();
+        }
+
+        public MyList(int capasity)
+        {
+            arrayMyList = new T[capasity];
+            Count = 0;
+        }
+
+        public MyList(IMyList<T> list)
+        {
+            arrayMyList = new T[list.Count * 2];
+
+            list.CopyTo(arrayMyList, 0);
+            Count = list.Count;
+        }
+
+        private void CapasityController()
+        {
+            if (arrayMyList.Length <= Count)
             {
-                count = value;
+                T[] newArrayMyList = new T[Count * 2];
+                arrayMyList.CopyTo(newArrayMyList, 0);
+                arrayMyList = newArrayMyList;
             }
         }
 
         public bool IsReadOnly => throw new NotImplementedException();
 
+        public T Current
+        {
+            get { return this[position]; }
+        }
+
+        object IEnumerator.Current
+        {
+            get { return this[position]; }
+        }
+
         public void Add(T item)
         {
-            throw new NotImplementedException();
+            CapasityController();
+            Count++;
+            arrayMyList[Count - 1] = item;
         }
 
         public void Clear()
         {
-            throw new NotImplementedException();
+            arrayMyList = new T[10];
+            Count = 0;
         }
 
         public bool Contains(T item)
         {
-            throw new NotImplementedException();
+            return arrayMyList.Contains(item);
         }
 
         public void CopyTo(T[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            if (arrayIndex >= Count || arrayIndex < 0)
+            {
+                throw new IndexOutOfRangeException();
+            }
+            arrayMyList.CopyTo(array, arrayIndex);
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            throw new NotImplementedException();
+            return arrayMyList.Take(Count).GetEnumerator();
         }
 
         public int IndexOf(T item)
         {
-            throw new NotImplementedException();
+            int index;
+
+            index = -1;
+
+            if (this.Contains(item))
+            {
+                for (int i = 0; i < Count; i++)
+                {
+                    if (arrayMyList[i].Equals(item))
+                    {
+                        index = i;
+                        break;
+                    }
+                }
+            }
+
+            return index;
         }
 
         public void Insert(int index, T item)
         {
-            throw new NotImplementedException();
+            if (index > Count || index < 0)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            T[] newArrayMyList = new T[Count + 2];
+
+
+            for (int i = 0, j = 0; i <= Count; i++, j++)
+            {
+                if (i == index)
+                {
+                    newArrayMyList[j] = item;
+                    j++;
+                }
+
+                newArrayMyList[j] = arrayMyList[i];
+            }
+
+            arrayMyList = newArrayMyList;
+            Count++;
         }
 
         public bool Remove(T item)
         {
-            throw new NotImplementedException();
+            int index;
+            bool removed;
+
+            removed = false;
+            index = IndexOf(item);
+            if (index != -1)
+            {
+                RemoveAt(index);
+                removed = true;
+            }
+
+            return removed;
         }
 
         public void RemoveAt(int index)
         {
-            throw new NotImplementedException();
+            if (index > Count || index < 0)
+            {
+                throw new IndexOutOfRangeException();
+            }
+
+            T[] newArrayMyList = new T[Count + 1];
+
+
+            for (int i = 0, j = 0; i <= Count; i++, j++)
+            {
+                if (i == index)
+                {
+                    i++;
+                }
+
+                newArrayMyList[j] = arrayMyList[i];
+            }
+
+            arrayMyList = newArrayMyList;
+            Count--;
+        }
+
+        public T[] Sort()
+        {
+            Array.Sort(arrayMyList, 0, Count);
+            return arrayMyList;
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        public void Dispose()
+        {
+            //
+        }
+
+        public bool MoveNext()
+        {
+            if (position < Count - 1)
+            {
+                position++;
+                return true;
+            }
+            else
+            {
+                Reset();
+                return false;
+            }
+        }
+
+        public void Reset()
+        {
+            position = -1;
         }
     }
 }

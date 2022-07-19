@@ -1,138 +1,135 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TestProj_18_05
 {
-    //class CompSoftware : IComparer<Software>
-    //{
-    //    public int Compare(Software x, Software y)
-    //    {
-    //        return string.Compare(x.SoftwareName, y.SoftwareName);
-    //    }
-    //}
-
     [DataContract]
-    internal /*abstract*/ class Software
+    internal abstract class Software
     {
-        protected string softwareName;
-        protected string softwareManufacturer;
-        protected string softwareType;
-
-        public Software(string softwareName, string softwareManufacturer)
-        {
-            this.softwareName = softwareName;
-            this.softwareManufacturer = softwareManufacturer;
-            this.softwareType = "Software";
-        }
-
         [DataMember]
         public string SoftwareName
         {
-            get { return softwareName; }
-            set { softwareName = value; }
+            get;
+            protected set;
         }
 
         [DataMember]
         public string SoftwareManufacturer
         {
-            get { return softwareManufacturer; }
-            set { softwareManufacturer = value; }
+            get;
+            protected set;
         }
 
         [DataMember]
-        public string SoftwareType
+        public virtual string SoftwareType
         {
-            get { return softwareType; }
-            private set { softwareType = value; }
+            get;
+            protected set;
         }
+
+        public Software(string softwareName, string softwareManufacturer)
+        {
+            this.SoftwareName = softwareName;
+            this.SoftwareManufacturer = softwareManufacturer;
+            this.SoftwareType = "Software";
+        }
+
+        public abstract override string ToString();
     }
 
     [DataContract]
     internal class FreeSoftware : Software
     {
-        private DateTime installationDate;
-        private TimeSpan freeTrialPeriod;
-
-        public FreeSoftware(string softwareName, string softwareManufacturer, DateTime installationDate,
-            TimeSpan freeTrialPeriod) : base(softwareName, softwareManufacturer)
-        {
-            this.softwareName = softwareName;
-            this.softwareManufacturer = softwareManufacturer;
-            this.installationDate = installationDate;
-            this.freeTrialPeriod = freeTrialPeriod;
-            this.softwareType = "FreeSoftware";
-        }
-
         [DataMember]
         public DateTime InstallationDate
         {
-            get { return installationDate; }
-            private set { installationDate = value; }
+            get;
+            private set;
         }
 
         [DataMember]
         public TimeSpan FreeTrialPeriod
         {
-            get { return freeTrialPeriod; }
-            private set { freeTrialPeriod = value; }
+            get;
+            private set;
         }
 
         [DataMember]
-        public string SoftwareType
+        public override string SoftwareType
         {
-            get { return softwareType; }
-            private set { softwareType = value; }
+            get;
+            protected set;
+        }
+
+        public FreeSoftware(string softwareName, string softwareManufacturer, DateTime installationDate,
+            TimeSpan freeTrialPeriod) : base(softwareName, softwareManufacturer)
+        {
+            this.SoftwareName = softwareName;
+            this.SoftwareManufacturer = softwareManufacturer;
+            this.InstallationDate = installationDate;
+            this.FreeTrialPeriod = freeTrialPeriod;
+            this.SoftwareType = "FreeSoftware";
+        }
+
+        public override string ToString()
+        {
+            string softInfo;
+
+            softInfo = $"\nSoftware name: {this.SoftwareName} \nManufacturer software: {this.SoftwareManufacturer} \nType software: {this.SoftwareType} \nInstallation date: {this.InstallationDate} \nFree trial period: {this.FreeTrialPeriod}\n";
+
+            return softInfo;
         }
     }
 
     [DataContract]
     internal class SharewareSoftware : Software
     {
-        private decimal price;
-        private DateTime installationDate;
-        private TimeSpan termOfUse;
-
-        public SharewareSoftware(string softwareName, string softwareManufacturer,
-            DateTime installationDate, TimeSpan termOfUse, decimal price) : base(softwareName, softwareManufacturer)
-        {
-            this.softwareName = softwareName;
-            this.softwareManufacturer = softwareManufacturer;
-            this.price = price;
-            this.installationDate = installationDate;
-            this.termOfUse = termOfUse;
-            this.softwareType = "SharewareSoftware";
-        }
-
         [DataMember]
         public decimal Price
         {
-            get { return price; }
-            private set { price = value; }
+            get;
+            private set;
         }
 
         [DataMember]
         public DateTime InstallationDate
         {
-            get { return installationDate; }
-            private set { installationDate = value; }
+            get;
+            private set;
         }
 
         [DataMember]
         public TimeSpan TermOfUse
         {
-            get { return termOfUse; }
-            private set { termOfUse = value; }
+            get;
+            private set;
         }
 
         [DataMember]
-        public string SoftwareType
+        public override string SoftwareType
         {
-            get { return softwareType; }
-            private set { softwareType = value; }
+            get;
+            protected set;
+        }
+
+        public SharewareSoftware(string softwareName, string softwareManufacturer,
+            DateTime installationDate, TimeSpan termOfUse, decimal price) : base(softwareName, softwareManufacturer)
+        {
+            this.SoftwareName = softwareName;
+            this.SoftwareManufacturer = softwareManufacturer;
+            this.Price = price;
+            this.InstallationDate = installationDate;
+            this.TermOfUse = termOfUse;
+            this.SoftwareType = "SharewareSoftware";
+        }
+
+        public override string ToString()
+        {
+            string softInfo;
+
+            softInfo = $"\nSoftware name: {this.SoftwareName} \nManufacturer software: {this.SoftwareManufacturer} \nType software: {this.SoftwareType} \nInstallation date: {this.InstallationDate} \nTerm of use: {this.TermOfUse} \nPrice: {this.Price}$\n";
+
+            return softInfo;
         }
     }
 
@@ -142,16 +139,18 @@ namespace TestProj_18_05
         public ProprietarySoftware(string softwareName, string softwareManufacturer)
             : base(softwareName, softwareManufacturer)
         {
-            this.softwareName = softwareName;
-            this.softwareManufacturer = softwareManufacturer;
-            this.softwareType = "ProprietarySoftware";
+            this.SoftwareName = softwareName;
+            this.SoftwareManufacturer = softwareManufacturer;
+            this.SoftwareType = "ProprietarySoftware";
         }
 
-        [DataMember]
-        public string SoftwareType
+        public override string ToString()
         {
-            get { return softwareType; }
-            private set { softwareType = value; }
+            string softInfo;
+
+            softInfo = $"\nSoftware name: {this.SoftwareName} \nManufacturer software: {this.SoftwareManufacturer} \nType software: {this.SoftwareType}\n";
+
+            return softInfo;
         }
     }
 

@@ -6,15 +6,13 @@ using System.Threading.Tasks;
 
 namespace TestProj_18_05.Service
 {
-    internal interface IDataController
+    internal interface IDataManager
     {
-        bool ExistError { get; }
-
         bool AddSoftware(Software software);
         bool DeleteSoftware(string softName);
         List<Software> GetSoftwares();
         List<Software> SortSoftwares();
-        List<Software> FindSoftwareByName(string name);
-        List<Software> FindSoftwareByType(string type);
+        List<Software> FindSoftwaresByName(string name);
+        List<Software> FindSoftwaresByType(string type);
     }
 }

@@ -1,44 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TestProj_18_05
 {
     [DataContract]
     internal class User
     {
-        private string login;
-        private string password;
-        private List<Software> softwares;
-
-        public User(string login, string password)
-        {
-            this.login = login;
-            this.password = password;
-        }
-
         [DataMember]
         public string Login
         {
-            get { return login; }
-            private set { login = value; }
+            get;
+            private set;
         }
 
         [DataMember]
         public string Password
         {
-            get { return password; }
-            private set { password = value; }
+            get;
+            set;
         }
 
         [DataMember]
         public List<Software> Softwares
         {
-            get { return softwares; }
-            set { softwares = value; }
+            get;
+            set;
         }
+
+        public User(string login, string password)
+        {
+            this.Login = login;
+            this.Password = password;
+        }
+
+        public override string ToString()
+        {
+            string userInfo, softInfo;
+
+            softInfo = "";
+            foreach (var soft in Softwares)
+            {
+                softInfo += soft.ToString();
+            }
+
+            userInfo = $"\nUser login: {this.Login} \nQuantity softwares: {this.Softwares.Count} \n{softInfo}\n{new string('-', 20)}";
+
+            return userInfo;
+        }
+
     }
 }

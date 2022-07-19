@@ -7,26 +7,18 @@ namespace PersonCollection
     {
         static void Main(string[] args)
         {
-            MyList<int> vs = new MyList<int>();
+            LinkedList<int> vs = new LinkedList<int>();
 
-            Console.WriteLine(vs[0] = 10);
-            Console.WriteLine("Hello World!");
-
-            int[] a = new int[3];
-
-            for (int i = 0; i < a.Length; i++)
+            for (int i = 0; i < 10; i++)
             {
-                a[i] = i + 1;
+                vs.AddLast(i + 1);
             }
 
-           // Console.WriteLine("Hello World!");
+            
 
-            int[] b = new int[4];
-            a.CopyTo(b, 0);
-            b[3] = 9999;
-            for (int i = 0; i < b.Length; i++)
+            foreach (var item in vs)
             {
-                Console.WriteLine(b[i]);
+                Console.WriteLine(item);
             }
         }
     }

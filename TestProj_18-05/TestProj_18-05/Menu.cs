@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using TestProj_18_05.Service;
 using TestProj_18_05.UserInterface;
 
@@ -10,238 +6,221 @@ namespace TestProj_18_05
 {
     class Menu
     {
-        private bool existError = false;
+        private readonly IWrite writeInfo;
+        private readonly IRead readInfo;
+        private readonly IConnectorDB connectorDB;
+        private readonly IComparer<Software> softwareComparer;
+        private IAuthenticator userAuthenticator;
+        private IDataManager dataManager;
+        private User user;
 
-        public bool ExistError
+        public bool Exit
         {
-            get { return existError; }
-            private set { existError = value; }
+            get;
+            private set;
         }
 
-        IShowInfo showInfo = new OutConsoleInterface();
-        IGetInfo getInfo = new InConsoleInterface();
-        IErrorCatcher errorCatcher = new ErrorCatcher();
-        IConnector connectorDB = new Context("../../../../DB/");
-        IUserConnector userConnector; // = new Authentication();
-
-        User user;
+        public Menu(IWrite writeInfo, IRead readInfo, IConnectorDB connectorDB, IComparer<Software> softwareComparer)
+        {
+            this.writeInfo = writeInfo;
+            this.readInfo = readInfo;
+            this.connectorDB = connectorDB;
+            this.softwareComparer = softwareComparer;
+            this.Exit = false;
+        }
 
         public void StartMenu()
         {
             int inputVar;
             string input;
+            string login, password, secondPassword;
 
-            showInfo.ClearDisplay();
-            input = getInfo.GetInfo("1) Sign in; \n2) Sign up; \n3) Exit;");
-            int.TryParse(input, out inputVar);
-            showInfo.ClearDisplay();
+            writeInfo.ClearDisplay();
+            input = readInfo.GetInfo("1) Sign in; \n2) Sign up; \n3) Exit;");
+            writeInfo.ClearDisplay();
+
+            if (!int.TryParse(input, out inputVar))
+            {
+                throw new InvalidInputFormat();
+            }
 
             switch (inputVar)
             {
                 case 1:
                     {
-                        try
-                        {
-                            string login, password;
-                            
-                            login = getInfo.GetInfo("Enter login: ");
-                            password = getInfo.GetInfo("Enter password: ");
+                        login = readInfo.GetInfo("Enter login: ");
+                        password = readInfo.GetInfo("Enter password: ");
 
-                            user = connectorDB.Connect(login);
-                            userConnector = new Authentication(user);
-                            user = userConnector.SignIn(login, password);
+                        user = connectorDB.Connect(login);
+                        userAuthenticator = new Authenticator(user);
+                        user = userAuthenticator.SignIn(login, password);
 
-                            if (!userConnector.ExistError)
-                            {
-                                MainMenu(user);
-                            }
-                            else
-                            {
-                                errorCatcher.Error("");
-                            }
+                        UserMenu(user);
 
-                            connectorDB.Disconnect();
-                        }
-                        catch (Exception)
-                        {
-                            errorCatcher.Error(1);
-                            existError = true;
-                        }
+                        connectorDB.Disconnect();
 
                         break;
                     }
                 case 2:
                     {
-                        try
-                        {
-                            string login, password, secondPassword;
+                        login = readInfo.GetInfo("Enter login: ");
+                        password = readInfo.GetInfo("Enter password: ");
+                        secondPassword = readInfo.GetInfo("Enter password again: ");
 
-                            login = getInfo.GetInfo("Enter login: ");
-                            password = getInfo.GetInfo("Enter password: ");
-                            secondPassword = getInfo.GetInfo("Enter password again: ");
+                        user = connectorDB.Connect(login);
+                        userAuthenticator = new Authenticator(user);
+                        user = userAuthenticator.SignUp(login, password, secondPassword);
 
-                            user = connectorDB.Connect(login);
-                            userConnector = new Authentication(user);
-                            user = userConnector.SignUp(login, password, secondPassword);
+                        UserMenu(user);
 
-                            if (!userConnector.ExistError)
-                            {
-                                MainMenu(user);
-                            }
-                            else
-                            {
-                                errorCatcher.Error("");
-                            }
-
-                            connectorDB.Disconnect();
-                        }
-                        catch (Exception)
-                        {
-                            errorCatcher.Error(1);
-                            existError = true;
-                        }
+                        connectorDB.Disconnect();
 
                         break;
                     }
                 case 3:
                     {
-                        showInfo.ShowInfo("Bye-Bye!!!");
-                        getInfo.GetInfo("");
+                        Exit = true;
+                        readInfo.GetInfo("Bye-Bye!!!");
                         break;
                     }
                 default:
                     {
-                        showInfo.ShowError("Operation not found!!!");
-                        existError = true;
-                        break;
+                        throw new OperationNotFound();
                     }
             }
         }
 
-        private void MainMenu(User user)
+        private void UserMenu(User user)
         {
-            IDataController dataController = new DataManager(user);
             int inputVar;
             string input;
-            bool exit = false;
+            bool exit;
+            Software software;
+            string nameSoftware;
 
             if (user == null)
             {
-                exit = true;
-                errorCatcher.Error(0);
+                throw new NoUserInformation();
             }
+
+            exit = false;
+            dataManager = new DataManager(user, readInfo, softwareComparer);
 
             while (!exit)
             {
-                showInfo.ClearDisplay();
-                showInfo.ShowHeaderInfo($"Hello, {user.Login} !!!");
-                input = getInfo.GetInfo("1) Add record; \n2) Delete record; \n3) Find record;" +
+                writeInfo.ClearDisplay();
+                writeInfo.HeaderInfo($"Hello, {user.Login} !!!");
+                input = readInfo.GetInfo("1) Add record; \n2) Delete record; \n3) Find record;" +
                     " \n4) Show information about all user`s records; \n5) Sort software by name; " +
                     " \n6) Save changes; \n7) Exit;");
-                int.TryParse(input, out inputVar);
-                showInfo.ClearDisplay();
+                writeInfo.ClearDisplay();
+
+                if (!int.TryParse(input, out inputVar))
+                {
+                    throw new InvalidInputFormat();
+                }
 
                 switch (inputVar)
                 {
                     case 1:
                         {
-                            Software software = getInfo.GetSoftware();
-                            dataController.AddSoftware(software);
+                            software = null;
+                            dataManager.AddSoftware(software);
                             break;
                         }
                     case 2:
                         {
-                            string nameSoftware = getInfo.GetInfo("Enter software name: ");
-                            dataController.DeleteSoftware(nameSoftware);
+                            nameSoftware = readInfo.GetInfo("Enter software name: ");
+                            dataManager.DeleteSoftware(nameSoftware);
                             break;
                         }
                     case 3:
                         {
-                            input = getInfo.GetInfo("1) Find by name; \n2) Find by type; \n3) Exit;");
-                            int.TryParse(input, out inputVar);
-                            showInfo.ClearDisplay();
+                            input = readInfo.GetInfo("1) Find by name; \n2) Find by type; \n3) Exit;");
+                            writeInfo.ClearDisplay();
+
+                            if (!int.TryParse(input, out inputVar))
+                            {
+                                throw new InvalidInputFormat();
+                            }
 
                             switch (inputVar)
                             {
                                 case 1:
                                     {
                                         string softName;
-                                        softName = getInfo.GetInfo("Enter software name: ");
-                                        showInfo.ShowAllSoftwaresInfo(dataController.FindSoftwareByName(softName));
-                                        getInfo.GetInfo("");
+                                        softName = readInfo.GetInfo("Enter software name: ");
+                                        foreach (var item in dataManager.FindSoftwaresByName(softName))
+                                        {
+                                            writeInfo.Info(item.ToString());
+                                        }
                                         break;
                                     }
                                 case 2:
                                     {
                                         string softType;
-                                        softType = getInfo.GetInfo("Enter software type: ");
-                                        showInfo.ShowAllSoftwaresInfo(dataController.FindSoftwareByType(softType));
-                                        getInfo.GetInfo("");
+                                        softType = readInfo.GetInfo("Enter software type: ");
+                                        foreach (var item in dataManager.FindSoftwaresByType(softType))
+                                        {
+                                            writeInfo.Info(item.ToString());
+                                        }
+                                        
                                         break;
                                     }
                                 case 3:
                                     {
-                                        showInfo.ShowInfo("Bye-Bye!!!");
-                                        getInfo.GetInfo("");
+                                        writeInfo.Info("Bye-Bye!!!");
                                         break;
                                     }
                                 default:
                                     {
-                                        showInfo.ShowError("Operation not found!!!");
-                                        existError = true;
-                                        break;
+                                        throw new OperationNotFound();
                                     }
                             }
                             break;
                         }
                     case 4:
                         {
-                            showInfo.ShowAllSoftwaresInfo(dataController.GetSoftwares());
-                            getInfo.GetInfo("");
+                            foreach (var item in dataManager.GetSoftwares())
+                            {
+                                writeInfo.Info(item.ToString());
+                            }
                             break;
                         }
                     case 5:
                         {
-                            showInfo.ShowAllSoftwaresInfo(dataController.SortSoftwares());
-                            getInfo.GetInfo("");
+                            foreach (var item in dataManager.SortSoftwares())
+                            {
+                                writeInfo.Info(item.ToString());
+                            }
+                            
                             break;
                         }
                     case 6:
                         {
-                            if (connectorDB.SaveChanges(user))
+                            if (!connectorDB.SaveChanges(user))
                             {
-                                showInfo.ShowInfo("Data saved successfully");
+                                throw new SaveDataError();
                             }
-                            else
-                            {
-                                errorCatcher.Error(0);
-                            }
-                            getInfo.GetInfo("");
+
+                            writeInfo.Info("Data saved successfully");
+
                             break;
                         }
                     case 7:
                         {
-                            showInfo.ShowInfo("Bye-Bye!!!");
-                            getInfo.GetInfo("");
+                            writeInfo.Info("Bye-Bye!!!");
+
                             exit = true;
                             break;
                         }
                     default:
                         {
-                            showInfo.ShowError("Operation not found!!!");
-                            getInfo.GetInfo("");
-                            existError = true;
-                            exit = true;
-                            break;
+                            throw new OperationNotFound();
                         }
                 }
 
-                if (dataController.ExistError)
-                {
-                    exit = dataController.ExistError;
-                    errorCatcher.Error("");
-                }
-                
+                readInfo.GetInfo("");
             }
         }
     }

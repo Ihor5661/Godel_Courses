@@ -1,16 +1,1 @@
-{
-  "Login": "ihor",
-  "Password": "qqqqqq",
-  "Softwares": [
-    {
-      "SoftwareName": "qqqwww",
-      "SoftwareManufacturer": "qqqwwwe",
-      "SoftwareType": "ProprietarySoftware"
-    },
-    {
-      "SoftwareName": "eeerrrttt",
-      "SoftwareManufacturer": "ttghddftyjgchn",
-      "SoftwareType": "ProprietarySoftware"
-    }
-  ]
-}
+{"$type":"TestProj_18_05.User, TestProj_18-05","Login":"ihor","Password":"qqqqqq","Softwares":{"$type":"System.Collections.Generic.List`1[[TestProj_18_05.Software, TestProj_18-05]], System.Private.CoreLib","$values":[{"$type":"TestProj_18_05.FreeSoftware, TestProj_18-05","InstallationDate":"2025-12-10T00:00:00","FreeTrialPeriod":"365.00:00:00","SoftwareType":"FreeSoftware","SoftwareName":"qwerty","SoftwareManufacturer":"qwerty12345"},{"$type":"TestProj_18_05.ProprietarySoftware, TestProj_18-05","SoftwareName":"hghgjgkfj","SoftwareManufacturer":"fsjknzfvkj","SoftwareType":"ProprietarySoftware"},{"$type":"TestProj_18_05.ProprietarySoftware, TestProj_18-05","SoftwareName":"aaaaaaaaaaaaaa","SoftwareManufacturer":"aaaaaaaaaaaaa","SoftwareType":"ProprietarySoftware"},{"$type":"TestProj_18_05.ProprietarySoftware, TestProj_18-05","SoftwareName":"xxxxxxxxxxxxxxxxxxx","SoftwareManufacturer":"xxxxxxxxxxxx","SoftwareType":"ProprietarySoftware"}]}}

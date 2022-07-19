@@ -1,53 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Json;
-using System.Text;
-using System.Threading.Tasks;
 using TestProj_18_05.UserInterface;
 
 namespace TestProj_18_05.Service
 {
-    internal class DataManager : IDataController
+    enum SoftwareTypes
+    {
+        FreeSoftware,
+        SharewareSoftware,
+        ProprietarySoftware
+    }
+
+    internal class DataManager : IDataManager
     {
         User user;
-        IErrorCatcher errorCatcher = new ErrorCatcher();
-        IShowInfo showInfo = new OutConsoleInterface();
-        IGetInfo getInfo = new InConsoleInterface();
-        bool existError = false;
+        IRead read;
+        IComparer<Software> softwareComparer;
 
-
-        public DataManager(User user)
+        public DataManager(User user, IRead read, IComparer<Software> softwareComparer)
         {
             if (user == null)
             {
-                errorCatcher.Error("No user information!!!");
-                existError = true;
-                getInfo.GetInfo("");
+                throw new NoUserInformation();
             }
-            else
-            {
-                this.user = user;
-            }
+
+            this.user = user;
+            this.read = read;
+            this.softwareComparer = softwareComparer;
+
         }
 
         public bool AddSoftware(Software software)
         {
-            if (software != null)
+            if (software == null)
             {
-                if (user.Softwares == null)
-                {
-                    user.Softwares = new List<Software>();
-                }
-                user.Softwares.Add(software);
+                //throw new NoSoftwareInformation();
+                software = GetSoftware();
             }
-            else
+
+            if (user.Softwares == null)
             {
-                errorCatcher.Error("No software information!!!");
-                existError = true;
-                getInfo.GetInfo("");
+                user.Softwares = new List<Software>();
             }
+            user.Softwares.Add(software);
 
             return true;
         }
@@ -56,24 +51,12 @@ namespace TestProj_18_05.Service
         {
             int numberSoft = FindNumSoftwareByName(softName);
 
-            if (user.Softwares != null)
+            if (user.Softwares == null)
             {
-                if (user.Softwares.Count > 0 && numberSoft != -1)
-                {
-                    user.Softwares.RemoveAt(numberSoft);
-                }
-                else
-                {
-                    errorCatcher.Error("Software with this name was not found!!!");
-                    existError = true;
-                }
-               
+                throw new NoSoftwareInformation();
             }
-            else
-            {
-                errorCatcher.Error("No software info!!!");
-                existError = true;
-            }
+
+            user.Softwares.RemoveAt(numberSoft);
 
             return true;
         }
@@ -91,11 +74,15 @@ namespace TestProj_18_05.Service
                 }
             }
 
+            if (numberSoft == -1)
+            {
+                throw new NotFoundSoftName();
+            }
+
             return numberSoft;
         }
-        
 
-        public List<Software> FindSoftwareByName(string namer)
+        public List<Software> FindSoftwaresByName(string namer)
         {
             List<Software> softwares = new List<Software>();
             bool isSoft = false;
@@ -115,7 +102,7 @@ namespace TestProj_18_05.Service
             return null;
         }
 
-        public List<Software> FindSoftwareByType(string type)
+        public List<Software> FindSoftwaresByType(string type)
         {
             List<Software> softwares = new List<Software>();
             bool isSoft = false;
@@ -140,38 +127,95 @@ namespace TestProj_18_05.Service
             return user.Softwares;
         }
 
-        public List<Software> SortSoftwares() //ToDo
+        public List<Software> SortSoftwares() 
         {
-            List<Software> softwaresTemp = new List<Software>(user.Softwares);
-            List<string> softName = new List<string>();
-            List<Software> softwares = new List<Software>();
+            List<Software> softwares = new List<Software>(user.Softwares);
+            softwares.Sort(softwareComparer);
 
-            for (int i = 0; i < user.Softwares.Count; i++)
-            {
-                softName.Add(user.Softwares[i].SoftwareName);
-            }
-            softName.Sort();
-
-            for (int i = 0; i < user.Softwares.Count; i++)
-            {
-                for (int j = 0; j < softwaresTemp.Count; j++)
-                {
-                    if (softName[i] == softwaresTemp[j].SoftwareName)
-                    {
-                        softwares.Add(softwaresTemp[j]);
-                        softwaresTemp.RemoveAt(j);
-                        break;
-                    }
-                }
-            }
-            
             return softwares;
         }
 
-        public bool ExistError
+        /////////////////////////////////////////////////////////////////////
+        private Software GetSoftware()
         {
-            get { return existError; }
-            private set { existError = value; }
+            Software software;
+            string softwareName;
+            string softwareManufacturer;
+            DateTime installationDate;
+            TimeSpan freeTrialPeriod, termOfUse;
+            decimal price;
+            int softwareType;
+
+
+            softwareType = GetTypeSoftware();
+
+            softwareName = read.GetInfo("Enter software name: ");
+            softwareManufacturer = read.GetInfo("Enter software manufacturer: ");
+
+            switch (softwareType)
+            {
+                case (int)SoftwareTypes.FreeSoftware:
+                    {
+                        installationDate = read.GetDateTime("Enter installation date (dd.mm.yyyy hh:mm:ss): ");
+                        freeTrialPeriod = read.GetTime("Enter free trial period (ddd.hh:mm:ss): ");
+                        software = new FreeSoftware(softwareName, softwareManufacturer, installationDate, freeTrialPeriod);
+                        break;
+                    }
+                case (int)SoftwareTypes.SharewareSoftware:
+                    {
+                        installationDate = read.GetDateTime("Enter installation date (dd.mm.yyyy hh:mm:ss): ");
+                        termOfUse = read.GetTime("Enter term of use (ddd.hh:mm:ss): ");
+                        price = read.GetCount("Enter price ($$$$.$$): ");
+
+                        software = new SharewareSoftware(softwareName, softwareManufacturer, installationDate, termOfUse, price);
+                        break;
+                    }
+                case (int)SoftwareTypes.ProprietarySoftware:
+                    {
+                        software = new ProprietarySoftware(softwareName, softwareManufacturer);
+                        break;
+                    }
+                default:
+                    {
+                        throw new OperationNotFound();
+                    }
+            }
+
+            return software;
+        }
+
+        private int GetTypeSoftware()
+        {
+            int softwareType;
+            string input;
+            string message = "";
+
+
+            for (int i = (int)SoftwareTypes.FreeSoftware; i < Enum.GetNames(typeof(SoftwareTypes)).Length; i++)
+            {
+                message += ($"{i + 1} - {(SoftwareTypes)i}\n");
+            }
+            message += ("Enter software type: ");
+
+            input = read.GetInfo(message);
+
+            if (!int.TryParse(input, out softwareType))
+            {
+                throw new InvalidInputFormat();
+            }
+
+            if (!IsPermissibleTypeSoftwareNumber(softwareType))
+            {
+                throw new OperationNotFound();
+            }
+
+            return --softwareType;
+        }
+
+        private bool IsPermissibleTypeSoftwareNumber(int number)
+        {
+            bool result = ((int)SoftwareTypes.FreeSoftware < number && number <= Enum.GetNames(typeof(SoftwareTypes)).Length);
+            return result;
         }
 
     }
