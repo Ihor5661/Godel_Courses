@@ -14,12 +14,12 @@ namespace PersonCollection
                 vs.AddLast(i + 1);
             }
 
-            
+            Console.WriteLine(vs.Find(1).Value);
 
-            foreach (var item in vs)
-            {
-                Console.WriteLine(item);
-            }
+            //foreach (var item in vs)
+            //{
+            //    Console.WriteLine(item);
+            //}
         }
     }
 }

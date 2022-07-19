@@ -15,6 +15,7 @@ namespace PersonCollection
         void AddBefore(T pointer, T item);
         void RemoveFirst();
         void RemoveLast();
+         Find(T item);
     }
 
     internal class MyLinkedList<T> : IMyLinkedList<T>
@@ -191,12 +192,14 @@ namespace PersonCollection
 
         public void AddAfter(T pointer, T item)
         {
-            //toDo
+            int index = IndexOf(pointer);
+            Insert(index, item);
         }
 
         public void AddBefore(T pointer, T item)
         {
-            //toDo
+            int index = IndexOf(pointer);
+            Insert(--index, item);
         }
 
         public void Clear()
@@ -265,66 +268,66 @@ namespace PersonCollection
             return index;
         }
 
-        //public void Insert(int index, T item)
-        //{
-        //    if (index > Count || index < 0)
-        //    {
-        //        throw new IndexOutOfRangeException();
-        //    }
+        private void Insert(int index, T item)
+        {
+            if (index > Count || index < 0)
+            {
+                throw new IndexOutOfRangeException();
+            }
 
-        //    if (index == 0)
-        //    {
-        //        this.AddFirst(item);
-        //        return;
-        //    }
-        //    if (index == Count)
-        //    {
-        //        this.Add(item);
-        //        return;
-        //    }
+            if (index == 0)
+            {
+                this.AddFirst(item);
+                return;
+            }
+            if (index == Count)
+            {
+                this.AddLast(item);
+                return;
+            }
 
-        //    bool isIncrement;
-        //    int counter;
-        //    NestedNode current;
+            bool isIncrement;
+            int counter;
+            NestedNode current;
 
 
 
-        //    if (Count / 2 > index)
-        //    {
-        //        current = head;
-        //        isIncrement = true;
-        //        counter = 0;
-        //    }
-        //    else
-        //    {
-        //        current = tail;
-        //        isIncrement = false;
-        //        counter = Count - 1;
-        //    }
+            if (Count / 2 > index)
+            {
+                current = head;
+                isIncrement = true;
+                counter = 0;
+            }
+            else
+            {
+                current = tail;
+                isIncrement = false;
+                counter = Count - 1;
+            }
 
-        //    while (current != null)
-        //    {
-        //        if (counter == index)
-        //        {
-        //            break;
-        //        }
-        //        if (isIncrement)
-        //        {
-        //            current = current.nextNode;
-        //            counter++;
-        //        }
-        //        else
-        //        {
-        //            current = current.previousNode;
-        //            counter--;
-        //        }
-        //    }
+            while (current != null)
+            {
+                if (counter == index)
+                {
+                    break;
+                }
+                if (isIncrement)
+                {
+                    current = current.nextNode;
+                    counter++;
+                }
+                else
+                {
+                    current = current.previousNode;
+                    counter--;
+                }
+            }
 
-        //    NestedNode newNode = new NestedNode(item, current, current.previousNode);
-        //    current.previousNode = newNode;
-        //    current.previousNode.previousNode.nextNode = newNode;
-        //    Count++;
-        //}
+            NestedNode newNode = new NestedNode(item, current, current.previousNode);
+            current.previousNode = newNode;
+            current.previousNode.previousNode.nextNode = newNode;
+            Count++;
+        }
 
         public bool Remove(T item)
         {
