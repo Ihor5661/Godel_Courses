@@ -8,5 +8,7 @@ namespace TestProj_18_05.UserInterface
         DateTime GetDateTime(string message);
         TimeSpan GetTime(string message);
         decimal GetCount(string message);
+
+        T GetT<T>(string message);
     }
 }

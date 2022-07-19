@@ -13,8 +13,11 @@ namespace PersonCollection
             {
                 vs.AddLast(i + 1);
             }
+            
 
-            Console.WriteLine(vs.Find(1).Value);
+
+
+            Console.WriteLine(vs.Find(1).ValueRef);
 
             //foreach (var item in vs)
             //{

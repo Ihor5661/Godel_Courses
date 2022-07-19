@@ -15,7 +15,7 @@ namespace PersonCollection
         void AddBefore(T pointer, T item);
         void RemoveFirst();
         void RemoveLast();
-         Find(T item);
+        // Find(T item);
     }
 
     internal class MyLinkedList<T> : IMyLinkedList<T>

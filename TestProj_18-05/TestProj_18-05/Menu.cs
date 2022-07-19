@@ -104,7 +104,7 @@ namespace TestProj_18_05
             }
 
             exit = false;
-            dataManager = new DataManager(user, readInfo, softwareComparer);
+            dataManager = new DataManager(user, readInfo);
 
             while (!exit)
             {

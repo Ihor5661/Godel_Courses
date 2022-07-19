@@ -14,9 +14,9 @@ namespace TestProj_18_05
             IWrite writeInfo = new WriteConsole();
             IRead readInfo = new ReadConsole(writeInfo);
             IConnectorDB connectorDB = new ConnectorDB(path);
-            IComparer<Software> comparer = new SoftwareComparer();
+ 
 
-            Menu menu = new Menu(writeInfo, readInfo, connectorDB, comparer);
+            Menu menu = new Menu(writeInfo, readInfo, connectorDB);
 
             try
             {

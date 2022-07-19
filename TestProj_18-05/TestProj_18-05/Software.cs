@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace TestProj_18_05
 {
     [DataContract]
-    internal abstract class Software
+    internal abstract class Software : IComparer<Software>
     {
         [DataMember]
         public string SoftwareName
@@ -35,6 +37,11 @@ namespace TestProj_18_05
         }
 
         public abstract override string ToString();
+
+        public int Compare(Software x, Software y)
+        {
+            return string.Compare(x.SoftwareName, y.SoftwareName);
+        }
     }
 
     [DataContract]

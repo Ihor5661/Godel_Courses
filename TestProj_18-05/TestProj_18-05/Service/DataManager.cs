@@ -15,9 +15,8 @@ namespace TestProj_18_05.Service
     {
         User user;
         IRead read;
-        IComparer<Software> softwareComparer;
 
-        public DataManager(User user, IRead read, IComparer<Software> softwareComparer)
+        public DataManager(User user, IRead read)
         {
             if (user == null)
             {
@@ -26,8 +25,6 @@ namespace TestProj_18_05.Service
 
             this.user = user;
             this.read = read;
-            this.softwareComparer = softwareComparer;
-
         }
 
         public bool AddSoftware(Software software)
@@ -130,7 +127,7 @@ namespace TestProj_18_05.Service
         public List<Software> SortSoftwares() 
         {
             List<Software> softwares = new List<Software>(user.Softwares);
-            softwares.Sort(softwareComparer);
+            softwares.Sort();
 
             return softwares;
         }
