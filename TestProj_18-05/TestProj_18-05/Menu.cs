@@ -9,7 +9,7 @@ namespace TestProj_18_05
         private readonly IWrite writeInfo;
         private readonly IRead readInfo;
         private readonly IConnectorDB connectorDB;
-        private readonly IComparer<Software> softwareComparer;
+        private readonly IHelper helper;
         private IAuthenticator userAuthenticator;
         private IDataManager dataManager;
         private User user;
@@ -20,12 +20,12 @@ namespace TestProj_18_05
             private set;
         }
 
-        public Menu(IWrite writeInfo, IRead readInfo, IConnectorDB connectorDB, IComparer<Software> softwareComparer)
+        public Menu(IWrite writeInfo, IRead readInfo, IConnectorDB connectorDB, IHelper helper)
         {
             this.writeInfo = writeInfo;
             this.readInfo = readInfo;
             this.connectorDB = connectorDB;
-            this.softwareComparer = softwareComparer;
+            this.helper = helper;
             this.Exit = false;
         }
 
@@ -41,7 +41,7 @@ namespace TestProj_18_05
 
             if (!int.TryParse(input, out inputVar))
             {
-                throw new InvalidInputFormat();
+                throw new InvalidInputFormatException();
             }
 
             switch (inputVar)
@@ -57,6 +57,7 @@ namespace TestProj_18_05
 
                         UserMenu(user);
 
+                        userAuthenticator.Exit(user);
                         connectorDB.Disconnect();
 
                         break;
@@ -70,9 +71,12 @@ namespace TestProj_18_05
                         user = connectorDB.Connect(login);
                         userAuthenticator = new Authenticator(user);
                         user = userAuthenticator.SignUp(login, password, secondPassword);
+                        connectorDB.SaveChanges(user);
+
 
                         UserMenu(user);
 
+                        userAuthenticator.Exit(user);
                         connectorDB.Disconnect();
 
                         break;
@@ -85,7 +89,7 @@ namespace TestProj_18_05
                     }
                 default:
                     {
-                        throw new OperationNotFound();
+                        throw new OperationNotFoundException();
                     }
             }
         }
@@ -100,11 +104,11 @@ namespace TestProj_18_05
 
             if (user == null)
             {
-                throw new NoUserInformation();
+                throw new NoUserInformationException();
             }
 
             exit = false;
-            dataManager = new DataManager(user, readInfo);
+            dataManager = new DataManager(user);
 
             while (!exit)
             {
@@ -117,14 +121,14 @@ namespace TestProj_18_05
 
                 if (!int.TryParse(input, out inputVar))
                 {
-                    throw new InvalidInputFormat();
+                    throw new InvalidInputFormatException();
                 }
 
                 switch (inputVar)
                 {
                     case 1:
                         {
-                            software = null;
+                            software = helper.GetSoftware();
                             dataManager.AddSoftware(software);
                             break;
                         }
@@ -141,7 +145,7 @@ namespace TestProj_18_05
 
                             if (!int.TryParse(input, out inputVar))
                             {
-                                throw new InvalidInputFormat();
+                                throw new InvalidInputFormatException();
                             }
 
                             switch (inputVar)
@@ -174,14 +178,22 @@ namespace TestProj_18_05
                                     }
                                 default:
                                     {
-                                        throw new OperationNotFound();
+                                        throw new OperationNotFoundException();
                                     }
                             }
                             break;
                         }
                     case 4:
                         {
-                            foreach (var item in dataManager.GetSoftwares())
+                            var collections = dataManager.GetSoftwares();
+
+                            if (collections == null)
+                            {
+                                writeInfo.Info("Software list is empty!!!");
+                                break;
+                            }
+
+                            foreach (var item in collections)
                             {
                                 writeInfo.Info(item.ToString());
                             }
@@ -189,6 +201,14 @@ namespace TestProj_18_05
                         }
                     case 5:
                         {
+                            var collections = dataManager.GetSoftwares();
+
+                            if (collections == null)
+                            {
+                                writeInfo.Info("Software list is empty!!!");
+                                break;
+                            }
+
                             foreach (var item in dataManager.SortSoftwares())
                             {
                                 writeInfo.Info(item.ToString());
@@ -200,7 +220,7 @@ namespace TestProj_18_05
                         {
                             if (!connectorDB.SaveChanges(user))
                             {
-                                throw new SaveDataError();
+                                throw new SaveDataException();
                             }
 
                             writeInfo.Info("Data saved successfully");
@@ -216,7 +236,7 @@ namespace TestProj_18_05
                         }
                     default:
                         {
-                            throw new OperationNotFound();
+                            throw new OperationNotFoundException();
                         }
                 }
 

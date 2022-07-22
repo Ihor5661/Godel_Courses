@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 namespace TestProj_18_05
 {
     [DataContract]
-    internal abstract class Software : IComparer<Software>
+    public abstract class Software : IComparer<Software>
     {
         [DataMember]
         public string SoftwareName
@@ -45,7 +45,7 @@ namespace TestProj_18_05
     }
 
     [DataContract]
-    internal class FreeSoftware : Software
+    public class FreeSoftware : Software
     {
         [DataMember]
         public DateTime InstallationDate
@@ -89,7 +89,7 @@ namespace TestProj_18_05
     }
 
     [DataContract]
-    internal class SharewareSoftware : Software
+    public class SharewareSoftware : Software
     {
         [DataMember]
         public decimal Price
@@ -141,7 +141,7 @@ namespace TestProj_18_05
     }
 
     [DataContract]
-    internal class ProprietarySoftware : Software
+    public class ProprietarySoftware : Software
     {
         public ProprietarySoftware(string softwareName, string softwareManufacturer)
             : base(softwareName, softwareManufacturer)

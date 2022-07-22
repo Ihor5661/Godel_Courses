@@ -22,11 +22,11 @@ namespace TestProj_18_05.Service
         {
             if (user == null)
             {
-                throw new UserNameUnknown();
+                throw new UnknownUserNameException();
             }
             if (user.Password != password)
             {
-                throw new PasswordValidation();
+                throw new PasswordValidationException();
             }
 
             return user;
@@ -36,21 +36,25 @@ namespace TestProj_18_05.Service
         {
             if (user != null)
             {
-                throw new UserNameToken();
+                throw new UserNameException();
             }
             if (password != secondPassword)
             {
-                throw new PasswordEquals();
+                throw new PasswordEqualsException();
             }
             if (password.Length < minPassLength)
             {
-                throw new PasswordFormat();
+                throw new PasswordFormatException();
             }
 
             user = new User(login, password);
             return user;
         }
 
-
+        public bool Exit(User user)
+        {
+            user = null;
+            return true;
+        }
     }
 }

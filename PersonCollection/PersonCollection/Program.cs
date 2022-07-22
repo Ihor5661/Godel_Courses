@@ -7,17 +7,23 @@ namespace PersonCollection
     {
         static void Main(string[] args)
         {
-            LinkedList<int> vs = new LinkedList<int>();
+            int[] a = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 };
+            MyStack<int> vs = new MyStack<int>();
 
-            for (int i = 0; i < 10; i++)
+
+            for (int i = 0; i < 11; i++)
             {
-                vs.AddLast(i + 1);
+                vs.Push(i + 1);
             }
-            
 
 
 
-            Console.WriteLine(vs.Find(1).ValueRef);
+            foreach (var item in vs)
+            {
+                Console.WriteLine(item);
+            }
+
+            Console.WriteLine();
 
             //foreach (var item in vs)
             //{

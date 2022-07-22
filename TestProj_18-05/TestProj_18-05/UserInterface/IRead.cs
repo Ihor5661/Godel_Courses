@@ -9,6 +9,5 @@ namespace TestProj_18_05.UserInterface
         TimeSpan GetTime(string message);
         decimal GetCount(string message);
 
-        T GetT<T>(string message);
     }
 }

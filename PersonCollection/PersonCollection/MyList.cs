@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace PersonCollection
 {
 
-    interface IMyList<T>: IMyCollection<T>, ICollection<T>
+    interface IMyList<T>: IMyCollection<T>
     {
         T this[int index]
         {
@@ -57,7 +57,8 @@ namespace PersonCollection
 
         public MyList()
         {
-            Clear();
+            arrayMyList = new T[10];
+            Count = 0;
         }
 
         public MyList(int capasity)
@@ -66,7 +67,7 @@ namespace PersonCollection
             Count = 0;
         }
 
-        public MyList(IMyList<T> list)
+        public MyList(ICollection<T> list)
         {
             arrayMyList = new T[list.Count * 2];
 

@@ -146,7 +146,7 @@ namespace PersonCollection
             Count = 0;
         }
 
-        public MyLinkedList(IMyLinkedList<T> list)
+        public MyLinkedList(ICollection<T> list)
         {
             foreach (var item in list)
             {
@@ -486,5 +486,21 @@ namespace PersonCollection
             return this as IEnumerator<T>;
         }
 
+        void ICollection<T>.Add(T item)
+        {
+            if (head == null)
+            {
+                head = new NestedNode(item, null, null);
+                tail = head;
+            }
+            else
+            {
+                NestedNode newTail = new NestedNode(item, null, tail);
+                tail.nextNode = newTail;
+
+                tail = newTail;
+            }
+            Count++;
+        }
     }
 }

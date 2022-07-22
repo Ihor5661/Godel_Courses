@@ -30,7 +30,7 @@ namespace TestProj_18_05.UserInterface
 
             if (!DateTime.TryParse(input, out date))
             {
-                throw new InvalidDateTimeFormat();
+                throw new InvalidDateTimeFormatException();
             }
 
             return date;
@@ -45,7 +45,7 @@ namespace TestProj_18_05.UserInterface
 
             if (!TimeSpan.TryParse(input, out timeSpan))
             {
-                throw new InvalidTimeFormat();
+                throw new InvalidTimeFormatException();
             }
 
             return timeSpan;
@@ -56,14 +56,13 @@ namespace TestProj_18_05.UserInterface
             decimal price;
             string input;
             input = GetInfo(message);
-            
+
             if (!decimal.TryParse(input, out price))
             {
-                throw new InvalidPriceFormat();
+                throw new InvalidPriceFormatException();
             }
 
             return price;
         }
-       
     }
 }

@@ -14,9 +14,9 @@ namespace TestProj_18_05
             IWrite writeInfo = new WriteConsole();
             IRead readInfo = new ReadConsole(writeInfo);
             IConnectorDB connectorDB = new ConnectorDB(path);
- 
+            IHelper helper = new Helper(readInfo);
 
-            Menu menu = new Menu(writeInfo, readInfo, connectorDB);
+            Menu menu = new Menu(writeInfo, readInfo, connectorDB, helper);
 
             try
             {
